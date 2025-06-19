@@ -71,7 +71,13 @@ const Index = () => {
               Illumina
             </Badge>
             <Badge variant="secondary" className="text-sm px-3 py-1">
-              NGS
+              PacBio Onso
+            </Badge>
+            <Badge variant="secondary" className="text-sm px-3 py-1">
+              MGI
+            </Badge>
+            <Badge variant="secondary" className="text-sm px-3 py-1">
+              NGS short reads
             </Badge>
           </div>
         </div>
