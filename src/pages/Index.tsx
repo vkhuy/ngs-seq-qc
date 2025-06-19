@@ -39,8 +39,8 @@ const Index = () => {
   ];
 
   const stats = [
-    { label: "Files Processed", value: "10K+", icon: Dna },
-    { label: "Labs Using SeqQC", value: "150+", icon: Users },
+    { label: "Files Processed", value: "∞∞", icon: Dna },
+    { label: "Labs Using SeqQC", value: "∞∞", icon: Users },
     { label: "Avg Processing Time", value: "3 min", icon: Zap },
   ];
 
