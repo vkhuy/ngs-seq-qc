@@ -29,7 +29,10 @@ const UploadSection = ({ className }: UploadSectionProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -49,10 +52,23 @@ const UploadSection = ({ className }: UploadSectionProps) => {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFiles = Array.from(e.dataTransfer.files).filter(
         (file) =>
-          file.name.endsWith(".fastq") ||
-          file.name.endsWith(".fq") ||
-          file.name.endsWith(".fastq.gz"),
+          (file.name.endsWith(".fastq") ||
+            file.name.endsWith(".fq") ||
+            file.name.endsWith(".fastq.gz")) &&
+          file.size <= MAX_FILE_SIZE,
       );
+      const oversized = Array.from(e.dataTransfer.files).find(
+        (file) =>
+          (file.name.endsWith(".fastq") ||
+            file.name.endsWith(".fq") ||
+            file.name.endsWith(".fastq.gz")) &&
+          file.size > MAX_FILE_SIZE,
+      );
+      if (oversized) {
+        setFileError("Each file must be 100 MB or less.");
+      } else {
+        setFileError(null);
+      }
       setFiles(droppedFiles);
     }
   }, []);
@@ -61,10 +77,23 @@ const UploadSection = ({ className }: UploadSectionProps) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files).filter(
         (file) =>
-          file.name.endsWith(".fastq") ||
-          file.name.endsWith(".fq") ||
-          file.name.endsWith(".fastq.gz"),
+          (file.name.endsWith(".fastq") ||
+            file.name.endsWith(".fq") ||
+            file.name.endsWith(".fastq.gz")) &&
+          file.size <= MAX_FILE_SIZE,
       );
+      const oversized = Array.from(e.target.files).find(
+        (file) =>
+          (file.name.endsWith(".fastq") ||
+            file.name.endsWith(".fq") ||
+            file.name.endsWith(".fastq.gz")) &&
+          file.size > MAX_FILE_SIZE,
+      );
+      if (oversized) {
+        setFileError("Each file must be 100 MB or less.");
+      } else {
+        setFileError(null);
+      }
       setFiles(selectedFiles);
     }
   };
@@ -174,6 +203,11 @@ const UploadSection = ({ className }: UploadSectionProps) => {
               </div>
             ))}
           </div>
+        )}
+
+        {/* File Error Message */}
+        {fileError && (
+          <div className="text-red-600 text-sm mb-2">{fileError}</div>
         )}
 
         {/* Upload Progress */}
