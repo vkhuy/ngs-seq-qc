@@ -165,7 +165,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
           <input
             type="file"
             multiple
-            accept=".fastq,.fq,.fastq.gz"
+            accept=".fastq,.fq,.gz"
             onChange={handleFileInput}
             className="hidden"
             id="file-upload"
