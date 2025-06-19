@@ -190,7 +190,7 @@ vercel
 
 ### Alternative: Deploy via Vercel Dashboard
 
-1. Push your code to GitHub/GitLab/Bitbucket
+1. Fork this repo
 2. Go to [vercel.com](https://vercel.com)
 3. Click "New Project"
 4. Import your repository
