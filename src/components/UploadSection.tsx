@@ -160,14 +160,16 @@ const UploadSection = ({ className }: UploadSectionProps) => {
             Drop your FASTQ files here
           </p>
           <p className="text-sm text-gray-600 mb-4">or click to browse</p>
+
           <input
             type="file"
             multiple
-            accept=".fastq,.fq,.fastq.gz,.fq.gz"
+            accept=".fastq,.fq,.fastq.gz,.fq.gz,application/gzip"
             onChange={handleFileInput}
             className="hidden"
             id="file-upload"
           />
+
           <Button asChild variant="outline">
             <label htmlFor="file-upload" className="cursor-pointer">
               Browse Files
@@ -245,7 +247,8 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Quality control analysis typically takes 2–5 minutes per file depending on size. You'll get FastQC-style reports with sequence quality, GC content, and adapter content.
+            Quality control analysis typically takes 2–5 minutes per file depending on size.
+            You’ll get FastQC-style reports with sequence quality, GC content, and adapter content.
           </AlertDescription>
         </Alert>
       </CardContent>
