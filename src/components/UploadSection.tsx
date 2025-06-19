@@ -136,7 +136,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         </CardTitle>
         <CardDescription>
           Upload your NGS short read data for quality control analysis.
-          Supported formats: .fastq, .fq, .fastq.gz
+          Supported formats: .fastq, .fq, .fastq.gz (up to 100 MB each).
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
