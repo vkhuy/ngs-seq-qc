@@ -34,6 +34,16 @@ const UploadSection = ({ className }: UploadSectionProps) => {
 
   const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
 
+  const isAcceptedFastq = (file: File) => {
+    const name = file.name.toLowerCase();
+    return (
+      name.endsWith(".fastq") ||
+      name.endsWith(".fastq.gz") ||
+      name.endsWith(".fq") ||
+      name.endsWith(".fq.gz")
+    );
+  };
+
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -49,52 +59,42 @@ const UploadSection = ({ className }: UploadSectionProps) => {
     e.stopPropagation();
     setDragActive(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const droppedFiles = Array.from(e.dataTransfer.files).filter(
-        (file) =>
-          (file.name.endsWith(".fastq") ||
-            file.name.endsWith(".fq") ||
-            file.name.endsWith(".fastq.gz")) &&
-          file.size <= MAX_FILE_SIZE,
+    if (e.dataTransfer.files) {
+      const allFiles = Array.from(e.dataTransfer.files);
+      const acceptedFiles = allFiles.filter(
+        (file) => isAcceptedFastq(file) && file.size <= MAX_FILE_SIZE
       );
-      const oversized = Array.from(e.dataTransfer.files).find(
-        (file) =>
-          (file.name.endsWith(".fastq") ||
-            file.name.endsWith(".fq") ||
-            file.name.endsWith(".fastq.gz")) &&
-          file.size > MAX_FILE_SIZE,
+      const oversized = allFiles.find(
+        (file) => isAcceptedFastq(file) && file.size > MAX_FILE_SIZE
       );
+
       if (oversized) {
         setFileError("Each file must be 100 MB or less.");
       } else {
         setFileError(null);
       }
-      setFiles(droppedFiles);
+
+      setFiles(acceptedFiles);
     }
   }, []);
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files).filter(
-        (file) =>
-          (file.name.endsWith(".fastq") ||
-            file.name.endsWith(".fq") ||
-            file.name.endsWith(".fastq.gz")) &&
-          file.size <= MAX_FILE_SIZE,
+      const allFiles = Array.from(e.target.files);
+      const acceptedFiles = allFiles.filter(
+        (file) => isAcceptedFastq(file) && file.size <= MAX_FILE_SIZE
       );
-      const oversized = Array.from(e.target.files).find(
-        (file) =>
-          (file.name.endsWith(".fastq") ||
-            file.name.endsWith(".fq") ||
-            file.name.endsWith(".fastq.gz")) &&
-          file.size > MAX_FILE_SIZE,
+      const oversized = allFiles.find(
+        (file) => isAcceptedFastq(file) && file.size > MAX_FILE_SIZE
       );
+
       if (oversized) {
         setFileError("Each file must be 100 MB or less.");
       } else {
         setFileError(null);
       }
-      setFiles(selectedFiles);
+
+      setFiles(acceptedFiles);
     }
   };
 
@@ -104,13 +104,11 @@ const UploadSection = ({ className }: UploadSectionProps) => {
     setIsUploading(true);
     setUploadProgress(0);
 
-    // Simulate upload and processing
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           setIsUploading(false);
-          // Navigate to results page
           navigate("/results", { state: { files } });
           return 100;
         }
@@ -136,7 +134,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         </CardTitle>
         <CardDescription>
           Upload your NGS short read data for quality control analysis.
-          Supported formats: .fastq, .fq, .fastq.gz (up to 100 MB each).
+          Supported formats: <code>.fastq</code>, <code>.fq</code>, <code>.fastq.gz</code>, <code>.fq.gz</code> (up to 100 MB each).
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -145,7 +143,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
           className={cn(
             "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
             dragActive ? "border-biotech-500 bg-biotech-50" : "border-gray-300",
-            "hover:border-biotech-400 hover:bg-gray-50",
+            "hover:border-biotech-400 hover:bg-gray-50"
           )}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
@@ -155,7 +153,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
           <Upload
             className={cn(
               "mx-auto h-12 w-12 mb-4",
-              dragActive ? "text-biotech-500" : "text-gray-400",
+              dragActive ? "text-biotech-500" : "text-gray-400"
             )}
           />
           <p className="text-lg font-medium text-gray-900 mb-2">
@@ -165,7 +163,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
           <input
             type="file"
             multiple
-            accept=".fastq,.fq,.gz"
+            accept=".fastq,.fq,.fastq.gz,.fq.gz"
             onChange={handleFileInput}
             className="hidden"
             id="file-upload"
@@ -180,9 +178,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         {/* File List */}
         {files.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-gray-900">
-              Selected Files:
-            </h3>
+            <h3 className="text-sm font-medium text-gray-900">Selected Files:</h3>
             {files.map((file, index) => (
               <div
                 key={index}
@@ -249,9 +245,7 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Quality control analysis typically takes 2-5 minutes per file
-            depending on file size. You'll see FastQC-style reports with
-            sequence quality metrics, GC content, and adapter analysis.
+            Quality control analysis typically takes 2–5 minutes per file depending on size. You'll get FastQC-style reports with sequence quality, GC content, and adapter content.
           </AlertDescription>
         </Alert>
       </CardContent>
