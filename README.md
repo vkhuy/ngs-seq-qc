@@ -188,9 +188,16 @@ vercel
 
 4. **Your app will be deployed and you'll get a URL like**: `https://seq-qc-xyz.vercel.app`
 
+**Note**: If you encounter build issues, the configuration has been optimized with:
+
+- Robust path alias resolution in `vite.config.ts`
+- TypeScript path mapping in `tsconfig.paths.json`
+- Code splitting for better performance
+- Proper file extensions handling
+
 ### Alternative: Deploy via Vercel Dashboard
 
-1. Fork this repo
+1. Push your code to GitHub/GitLab/Bitbucket
 2. Go to [vercel.com](https://vercel.com)
 3. Click "New Project"
 4. Import your repository
