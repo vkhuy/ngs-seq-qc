@@ -1,8 +1,33 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
-import { CheckCircle, AlertTriangle, XCircle, TrendingUp, Dna, BarChart3 } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from "recharts";
+import {
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  TrendingUp,
+  Dna,
+  BarChart3,
+} from "lucide-react";
 
 // Mock data for FastQC-style visualizations
 const qualityData = [
@@ -57,9 +82,22 @@ interface QCVisualizationProps {
 }
 
 const QCVisualization = ({ filename }: QCVisualizationProps) => {
-  const getQualityStatus = (value: number, thresholds: {good: number, warning: number}) => {
-    if (value >= thresholds.good) return { status: "excellent", color: "bg-quality-excellent", icon: CheckCircle };
-    if (value >= thresholds.warning) return { status: "good", color: "bg-quality-warning", icon: AlertTriangle };
+  const getQualityStatus = (
+    value: number,
+    thresholds: { good: number; warning: number },
+  ) => {
+    if (value >= thresholds.good)
+      return {
+        status: "excellent",
+        color: "bg-quality-excellent",
+        icon: CheckCircle,
+      };
+    if (value >= thresholds.warning)
+      return {
+        status: "good",
+        color: "bg-quality-warning",
+        icon: AlertTriangle,
+      };
     return { status: "poor", color: "bg-quality-poor", icon: XCircle };
   };
 
@@ -113,26 +151,31 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
       <Card>
         <CardHeader>
           <CardTitle>Analysis Modules</CardTitle>
-          <CardDescription>Summary of all quality control checks</CardDescription>
+          <CardDescription>
+            Summary of all quality control checks
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3">
             {modules.map((module, index) => {
               const Icon = module.icon;
               return (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg border">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 rounded-lg border"
+                >
                   <div className="flex items-center space-x-3">
                     <Icon className="h-5 w-5 text-biotech-500" />
                     <span className="font-medium">{module.name}</span>
                   </div>
-                  <Badge 
+                  <Badge
                     variant={module.status === "pass" ? "default" : "secondary"}
                     className={
-                      module.status === "pass" 
-                        ? "bg-quality-excellent text-white" 
+                      module.status === "pass"
+                        ? "bg-quality-excellent text-white"
                         : module.status === "warn"
-                        ? "bg-quality-warning text-white"
-                        : "bg-quality-fail text-white"
+                          ? "bg-quality-warning text-white"
+                          : "bg-quality-fail text-white"
                     }
                   >
                     {module.status.toUpperCase()}
@@ -158,7 +201,8 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
             <CardHeader>
               <CardTitle>Per Base Sequence Quality</CardTitle>
               <CardDescription>
-                Quality scores across all bases (higher is better, >20 is good, >30 is excellent)
+                Quality scores across all bases. Higher is better, above 20 is
+                good, above 30 is excellent.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -168,18 +212,50 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
                   <XAxis dataKey="position" />
                   <YAxis domain={[0, 40]} />
                   <Tooltip />
-                  {/* Quality score zones */}
                   <defs>
-                    <linearGradient id="qualityGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient
+                      id="qualityGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
                       <stop offset="0%" stopColor="#16a34a" stopOpacity={0.1} />
-                      <stop offset="25%" stopColor="#22c55e" stopOpacity={0.1} />
-                      <stop offset="50%" stopColor="#f59e0b" stopOpacity={0.1} />
-                      <stop offset="100%" stopColor="#ef4444" stopOpacity={0.1} />
+                      <stop
+                        offset="25%"
+                        stopColor="#22c55e"
+                        stopOpacity={0.1}
+                      />
+                      <stop
+                        offset="50%"
+                        stopColor="#f59e0b"
+                        stopOpacity={0.1}
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="#ef4444"
+                        stopOpacity={0.1}
+                      />
                     </linearGradient>
                   </defs>
-                  <Area dataKey="q75" stackId="1" stroke="none" fill="url(#qualityGradient)" />
-                  <Line type="monotone" dataKey="mean" stroke="#0ea5e9" strokeWidth={3} />
-                  <Line type="monotone" dataKey="median" stroke="#16a34a" strokeWidth={2} />
+                  <Area
+                    dataKey="q75"
+                    stackId="1"
+                    stroke="none"
+                    fill="url(#qualityGradient)"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="mean"
+                    stroke="#0ea5e9"
+                    strokeWidth={3}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="median"
+                    stroke="#16a34a"
+                    strokeWidth={2}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -191,7 +267,8 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
             <CardHeader>
               <CardTitle>Per Sequence GC Content</CardTitle>
               <CardDescription>
-                Distribution of GC content across all sequences (normal distribution expected)
+                Distribution of GC content across all sequences (normal
+                distribution expected)
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -201,7 +278,13 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
                   <XAxis dataKey="gc" />
                   <YAxis />
                   <Tooltip />
-                  <Area type="monotone" dataKey="count" stroke="#0ea5e9" fill="#0ea5e9" fillOpacity={0.6} />
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#0ea5e9"
+                    fill="#0ea5e9"
+                    fillOpacity={0.6}
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
@@ -245,9 +328,27 @@ const QCVisualization = ({ filename }: QCVisualizationProps) => {
                   <XAxis dataKey="position" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="illumina" stroke="#ef4444" strokeWidth={2} name="Illumina Universal" />
-                  <Line type="monotone" dataKey="nextera" stroke="#f59e0b" strokeWidth={2} name="Nextera Transposase" />
-                  <Line type="monotone" dataKey="polyA" stroke="#8b5cf6" strokeWidth={2} name="Poly-A" />
+                  <Line
+                    type="monotone"
+                    dataKey="illumina"
+                    stroke="#ef4444"
+                    strokeWidth={2}
+                    name="Illumina Universal"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="nextera"
+                    stroke="#f59e0b"
+                    strokeWidth={2}
+                    name="Nextera Transposase"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="polyA"
+                    stroke="#8b5cf6"
+                    strokeWidth={2}
+                    name="Poly-A"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
