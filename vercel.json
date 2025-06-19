@@ -1,6 +1,5 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
   "framework": "vite",
-  "installCommand": "npm ci && npx update-browserslist-db@latest"
+  "buildCommand": "npx update-browserslist-db@latest && npm run build",
+  "outputDirectory": "dist"
 }
