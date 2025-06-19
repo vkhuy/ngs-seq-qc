@@ -10,25 +10,9 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react()],
   resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: path.resolve(__dirname, "./src"),
-      },
-      {
-        find: "@/lib",
-        replacement: path.resolve(__dirname, "./src/lib"),
-      },
-      {
-        find: "@/components",
-        replacement: path.resolve(__dirname, "./src/components"),
-      },
-      {
-        find: "@/hooks",
-        replacement: path.resolve(__dirname, "./src/hooks"),
-      },
-    ],
-    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   build: {
     rollupOptions: {
