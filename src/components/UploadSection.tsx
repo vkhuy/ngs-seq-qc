@@ -19,6 +19,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { apiClient } from "@/lib/api";
 
 interface UploadSectionProps {
   className?: string;
@@ -104,17 +105,25 @@ const UploadSection = ({ className }: UploadSectionProps) => {
     setIsUploading(true);
     setUploadProgress(0);
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          navigate("/results", { state: { files } });
-          return 100;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 200);
+    try {
+      // For now, only handle single file upload
+      const file = files[0];
+      
+      // Show progress while uploading
+      setUploadProgress(30);
+      
+      const response = await apiClient.uploadFile(file);
+      
+      setUploadProgress(100);
+      
+      // Navigate to results page with the file ID
+      navigate("/results", { state: { fileId: response.id, filename: response.filename } });
+    } catch (error) {
+      console.error('Upload error:', error);
+      setFileError(error instanceof Error ? error.message : 'Upload failed');
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   const formatFileSize = (bytes: number) => {

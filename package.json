@@ -4,7 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:fullstack": "concurrently \"npm run dev\" \"npm run dev:backend\"",
     "build": "vite build",
+    "build:backend": "cd backend && npm run build",
+    "build:fullstack": "npm run build && npm run build:backend",
+    "start:backend": "cd backend && npm start",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"
@@ -73,6 +78,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^8.2.2",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "prettier": "^3.5.3",

@@ -50,29 +50,6 @@ const QCResults = () => {
   }, [fileId]);
 
   if (!fileId || (!loading && !results && !error)) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-biotech-50">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <Card className="max-w-md mx-auto text-center">
-            <CardContent className="pt-8">
-              <h2 className="text-xl font-semibold mb-4">No Files Found</h2>
-              <p className="text-gray-600 mb-6">
-                No files were provided for analysis. Please upload files first.
-              </p>
-              <Button asChild>
-                <Link to="/">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Upload
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-biotech-50">
@@ -226,7 +203,7 @@ const QCResults = () => {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-600">
-                Encoding & Length
+                Processing Time
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -281,7 +258,7 @@ const QCResults = () => {
                 Analysis Complete!
               </h3>
               <p className="text-gray-600 mb-6">
-                Your sequencing data quality has been analyzed. You can proceed with
+                Your sequencing data quality looks good. You can proceed with
                 downstream analysis or analyze more files.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
