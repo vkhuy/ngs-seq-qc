@@ -103,18 +103,67 @@ const UploadSection = ({ className }: UploadSectionProps) => {
 
     setIsUploading(true);
     setUploadProgress(0);
+    setFileError(null);
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          navigate("/results", { state: { files } });
-          return 100;
-        }
-        return prev + Math.random() * 15;
+    try {
+      // Get API URL from environment variable or fallback to localhost
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      
+      // Create FormData for file upload
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('files', file);
       });
-    }, 200);
+
+      // Check if backend is available
+      const healthResponse = await fetch(apiUrl.replace('/api', '/health'));
+      if (!healthResponse.ok) {
+        throw new Error('Backend server is not running. File uploads will fail until the backend is started.');
+      }
+
+      // Upload files with progress simulation
+      const uploadPromise = fetch(`${apiUrl}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      // Simulate progress while uploading
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) return prev; // Cap at 90% until response
+          return prev + Math.random() * 15;
+        });
+      }, 200);
+
+      const response = await uploadPromise;
+      clearInterval(progressInterval);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Upload failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      // Complete progress and navigate to results
+      setUploadProgress(100);
+      setTimeout(() => {
+        setIsUploading(false);
+        navigate("/results", { 
+          state: { 
+            files,
+            uploadResult: result,
+            apiUrl 
+          } 
+        });
+      }, 500);
+
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setIsUploading(false);
+      setUploadProgress(0);
+      setFileError(error.message || 'Upload failed. Please try again.');
+    }
   };
 
   const formatFileSize = (bytes: number) => {

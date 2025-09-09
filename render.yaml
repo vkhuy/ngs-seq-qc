@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: ngs-seq-qc-backend
+    runtime: node
+    plan: starter  # Free tier, upgrade to paid plan for production
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000  # Render's default port
+      - key: CORS_ORIGINS
+        # Update this to match your frontend domain(s)
+        # Examples:
+        # - Single domain: https://ngs-seq-qc.vercel.app
+        # - Wildcard for branch previews: https://ngs-seq-qc-git-*.vercel.app
+        value: https://ngs-seq-qc-git-*.vercel.app
+    
+    # Optional: Enable persistent disk for file storage
+    # disk:
+    #   name: uploads
+    #   mountPath: /app/backend/uploads
+    #   sizeGB: 1
+
+    # Auto-deploy settings
+    autoDeploy: true
+    branch: main
+    
+    # Health check settings
+    healthCheck:
+      path: /health
+      timeoutSeconds: 10
+      intervalSeconds: 30
+      
+# Optional: Add a PostgreSQL database for production
+# databases:
+#   - name: ngs-seq-qc-db
+#     plan: starter  # Free tier
+#     databaseName: ngsseqqc
+#     user: ngsseqqc
