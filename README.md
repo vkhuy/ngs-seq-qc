@@ -48,14 +48,35 @@ A modern, web-based NGS (Next-Generation Sequencing) quality control platform th
 git clone <your-repo-url>
 cd seqQC
 
-# Install dependencies
+# Install frontend dependencies
 npm install
 
-# Start development server
+# Install backend dependencies
+cd backend && npm install && cd ..
+```
+
+### Development Server
+
+#### Option 1: Start Both Frontend and Backend (Recommended)
+```bash
+# Start both frontend and backend servers
+npm run dev:fullstack
+```
+
+#### Option 2: Start Servers Separately
+```bash
+# Terminal 1: Start backend server
+npm run dev:backend
+
+# Terminal 2: Start frontend server
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+The application will be available at:
+- **Frontend**: `http://localhost:8080` (or `http://localhost:5173`)
+- **Backend**: `http://localhost:3001`
+
+> **⚠️ Important**: Both frontend and backend servers must be running for the application to work properly. If you see "Failed to fetch" errors, ensure the backend server is running on port 3001.
 
 ### Building for Production
 

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api";
+import BackendStatus from "@/components/BackendStatus";
 
 interface UploadSectionProps {
   className?: string;
@@ -147,6 +148,9 @@ const UploadSection = ({ className }: UploadSectionProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Backend Status Check */}
+        <BackendStatus />
+
         {/* Drop Zone */}
         <div
           className={cn(
@@ -214,7 +218,15 @@ const UploadSection = ({ className }: UploadSectionProps) => {
 
         {/* File Error Message */}
         {fileError && (
-          <div className="text-red-600 text-sm mb-2">{fileError}</div>
+          <Alert className="border-red-200 bg-red-50">
+            <AlertCircle className="h-4 w-4 text-red-600" />
+            <AlertDescription className="text-red-800">
+              <div className="space-y-2">
+                <strong>Error:</strong>
+                <div className="whitespace-pre-wrap text-sm">{fileError}</div>
+              </div>
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Upload Progress */}

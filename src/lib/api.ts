@@ -47,42 +47,82 @@ export interface QCResults {
   createdAt: string;
 }
 
+const isConnectionError = (error: unknown): boolean => {
+  if (error instanceof TypeError && error.message === 'Failed to fetch') {
+    return true;
+  }
+  return false;
+};
+
+const createConnectionErrorMessage = (operation: string): string => {
+  return `Unable to connect to the backend server. Please ensure that:
+
+1. The backend server is running on port 3001
+2. Run "npm run dev:backend" in a separate terminal, or
+3. Run "npm run dev:fullstack" to start both frontend and backend
+
+If the backend is running, check that no firewall is blocking the connection.
+
+Technical details: ${operation} failed - connection to ${API_BASE_URL} was refused.`;
+};
+
 export const apiClient = {
   async uploadFile(file: File): Promise<UploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
 
-    const response = await fetch(`${API_BASE_URL}/upload`, {
-      method: 'POST',
-      body: formData,
-    });
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Upload failed');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+
+      return response.json();
+    } catch (error) {
+      if (isConnectionError(error)) {
+        throw new Error(createConnectionErrorMessage('File upload'));
+      }
+      throw error;
     }
-
-    return response.json();
   },
 
   async getResults(id: string): Promise<QCResults> {
-    const response = await fetch(`${API_BASE_URL}/results/${id}`);
+    try {
+      const response = await fetch(`${API_BASE_URL}/results/${id}`);
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to fetch results');
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to fetch results');
+      }
+
+      return response.json();
+    } catch (error) {
+      if (isConnectionError(error)) {
+        throw new Error(createConnectionErrorMessage('Results retrieval'));
+      }
+      throw error;
     }
-
-    return response.json();
   },
 
   async checkHealth(): Promise<{ status: string; timestamp: string }> {
-    const response = await fetch(`${API_BASE_URL}/health`);
-    
-    if (!response.ok) {
-      throw new Error('Backend health check failed');
-    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`);
+      
+      if (!response.ok) {
+        throw new Error('Backend health check failed');
+      }
 
-    return response.json();
+      return response.json();
+    } catch (error) {
+      if (isConnectionError(error)) {
+        throw new Error(createConnectionErrorMessage('Backend health check'));
+      }
+      throw error;
+    }
   }
 };
