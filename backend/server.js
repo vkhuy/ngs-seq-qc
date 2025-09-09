@@ -90,7 +90,7 @@ app.use(fileUpload({
   createParentPath: true,
   tempFileDir: join(__dirname, 'temp'),
   useTempFiles: true,
-  safeFileNames: true,
+  safeFileNames: false, // Allow full filenames including extensions
   preserveExtension: true
 }));
 
