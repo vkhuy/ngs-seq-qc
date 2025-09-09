@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import UploadSection from "@/components/UploadSection";
+import BackendStatus from "@/components/BackendStatus";
 import {
   Card,
   CardContent,
